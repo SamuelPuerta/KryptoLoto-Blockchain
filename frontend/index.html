@@ -133,6 +133,30 @@
             </div>
           </section>
 
+          <section class="view" data-view="cartera" hidden aria-labelledby="tituloCartera">
+            <h2 class="sr-only" id="tituloCartera">Mis boletos</h2>
+            <div class="wallet-grid">
+              <article class="quota-card">
+                <span class="eyebrow">TU CUPO</span>
+                <div class="ring">
+                  <svg viewBox="0 0 120 120" aria-hidden="true">
+                    <circle class="ring-track" cx="60" cy="60" r="52" />
+                    <circle class="ring-fill" id="quotaRing" cx="60" cy="60" r="52" />
+                  </svg>
+                  <div class="ring-center"><strong id="ticketsLeft">—</strong><small>restantes</small></div>
+                </div>
+                <p class="quota-hint" id="ticketsLimitHint">Límite acumulado por participante.</p>
+              </article>
+              <article class="tickets-card">
+                <header class="card-head">
+                  <div><span class="eyebrow">ERC-721</span><h3>Mis boletos</h3></div>
+                  <span class="mini-counter" id="myTicketsCount">0</span>
+                </header>
+                <p class="panel-text">El premio es para el <strong>titular actual</strong> de cada NFT, no para quien lo compró primero.</p>
+                <div class="ticket-list" id="ticketsList"><p class="empty-state">Conecta MetaMask para ver tus boletos.</p></div>
+              </article>
+            </div>
+          </section>
 
 
         </main>
