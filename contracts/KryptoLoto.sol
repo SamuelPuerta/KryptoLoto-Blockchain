@@ -83,6 +83,11 @@ contract Loteria is Ownable, ReentrancyGuard, Pausable {
     uint256 public constant PRECIO_BOLETO_TOKENS = 25;
     uint256 public constant MAX_BOLETOS_POR_COMPRA = 4;
 
+    // MEJORA 2: limite acumulado de boletos por participante. Cuenta los
+    // boletos COMPRADOS por la direccion (no los NFT que tenga en su wallet).
+    uint256 public constant MAX_BOLETOS_POR_USUARIO = 20;
+    mapping(address => uint256) public boletosComprados;
+
     uint256 public siguienteBoleto = 1;
     uint256 public premioAcumulado; // Unidades minimas del ERC-20 KLT.
 
@@ -141,6 +146,12 @@ contract Loteria is Ownable, ReentrancyGuard, Pausable {
         return siguienteBoleto - 1;
     }
 
+    // Boletos que aun puede comprar una direccion antes de llegar al limite.
+    function boletosRestantes(address usuario) external view returns (uint256) {
+        uint256 usados = boletosComprados[usuario];
+        return usados >= MAX_BOLETOS_POR_USUARIO ? 0 : MAX_BOLETOS_POR_USUARIO - usados;
+    }
+
     function comprarBoletos(uint256 cantidad)
         external
         nonReentrant
@@ -151,6 +162,10 @@ contract Loteria is Ownable, ReentrancyGuard, Pausable {
         require(
             cantidad <= MAX_BOLETOS_POR_COMPRA,
             "Supera el maximo de boletos por compra"
+        );
+        require(
+            boletosComprados[msg.sender] + cantidad <= MAX_BOLETOS_POR_USUARIO,
+            "Limite acumulado por participante superado"
         );
         require(
             boletoNFT.owner() == address(this),
@@ -176,6 +191,7 @@ contract Loteria is Ownable, ReentrancyGuard, Pausable {
             siguienteBoleto++;
         }
 
+        boletosComprados[msg.sender] += cantidad;
         premioAcumulado += costoTotal;
         emit BoletosComprados(msg.sender, cantidad, costoTotal);
     }
