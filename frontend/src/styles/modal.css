@@ -1,0 +1,16 @@
+/* ---------- Diálogos ---------- */
+.modal {
+  position: fixed; inset: 0; z-index: 80; display: grid; place-items: center; padding: 20px;
+  background: rgba(2, 8, 5, 0.72); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); animation: fade-in 0.3s ease both;
+}
+.modal-sheet {
+  position: relative; z-index: 1; display: grid; gap: 14px; width: min(460px, 100%); padding: 30px;
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.06), rgba(255, 255, 255, 0.02)), var(--bg-elevated);
+  border: 1px solid var(--border-strong); border-radius: 26px; box-shadow: 0 40px 100px rgba(0, 0, 0, 0.6); animation: sheet-in 0.45s var(--ease) both;
+}
+.modal-sheet h3 { font-size: 1.5rem; font-weight: 700; letter-spacing: -0.035em; }
+.modal-sheet p { color: var(--text-muted); font-size: 0.93rem; }
+.modal-actions { display: flex; flex-wrap: wrap; justify-content: flex-end; gap: 10px; margin-top: 8px; }
+@keyframes fade-in { from { opacity: 0; } }
+@keyframes sheet-in { from { opacity: 0; transform: translateY(18px) scale(0.97); } }
+

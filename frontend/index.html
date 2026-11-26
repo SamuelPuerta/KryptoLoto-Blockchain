@@ -196,10 +196,45 @@
             </div>
           </section>
 
+          <section class="view" data-view="admin" hidden aria-labelledby="tituloAdmin">
+            <h2 class="sr-only" id="tituloAdmin">Administración</h2>
+            <div class="admin-grid">
+              <article class="console-card">
+                <header class="card-head"><div><span class="eyebrow">CONSOLA</span><h3>Control de ventas</h3></div></header>
+                <p class="console-status">Estado actual: <strong id="adminSalesStatus">—</strong></p>
+                <div class="segmented" role="group" aria-label="Estado de las ventas">
+                  <button class="btn btn-outline" id="btnPause" type="button" disabled>Pausar ventas</button>
+                  <button class="btn btn-outline" id="btnResume" type="button" disabled>Reanudar ventas</button>
+                </div>
+                <p class="panel-text">Mientras estén pausadas no se compran boletos. El sorteo sigue disponible para cerrar la ronda.</p>
+              </article>
+
+              <article class="draw-card">
+                <header class="card-head"><div><span class="eyebrow eyebrow-gold">ZONA IRREVERSIBLE</span><h3>Sortear y pagar</h3></div><span class="draw-icon" aria-hidden="true">✦</span></header>
+                <ul class="checklist" aria-label="Condiciones del sorteo">
+                  <li data-ok="false" id="chkNft"><i></i><span>Administración de BoletoNFT en manos de <code>Loteria</code></span></li>
+                  <li data-ok="false" id="chkTickets"><i></i><span id="chkTicketsText">Al menos un boleto vendido</span></li>
+                  <li data-ok="false" id="chkOpen"><i></i><span>La ronda sigue abierta</span></li>
+                </ul>
+                <button class="btn btn-draw" id="btnDraw" type="button" disabled>Ejecutar sorteo <span aria-hidden="true">✦</span></button>
+                <p class="admin-note" id="adminNote">Conecta la cuenta administradora para habilitar el sorteo.</p>
+              </article>
+            </div>
+          </section>
         </main>
       </div>
     </div>
 
+    <div class="modal" id="confirmModal" role="dialog" aria-modal="true" aria-labelledby="confirmTitle" hidden>
+      <div class="modal-sheet">
+        <h3 id="confirmTitle">Confirmar</h3>
+        <p id="confirmText"></p>
+        <div class="modal-actions">
+          <button class="btn btn-outline" id="confirmCancel" type="button">Cancelar</button>
+          <button class="btn btn-draw" id="confirmOk" type="button">Continuar</button>
+        </div>
+      </div>
+    </div>
 
 
     <div id="statusToast" class="toast" role="status" aria-live="polite" hidden><span id="toastMessage"></span><a id="toastLink" target="_blank" rel="noopener noreferrer" hidden>Ver transacción ↗</a><button id="closeToast" aria-label="Cerrar aviso" type="button">×</button></div>
