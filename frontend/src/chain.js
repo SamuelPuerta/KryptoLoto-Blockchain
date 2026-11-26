@@ -146,4 +146,87 @@ export async function actualizarDatos() {
   }
 }
 
+async function ejecutarTransaccion(etiqueta, construir) {
+  if (!estado.wallet || estado.txEnCurso) return false;
+  estado.txEnCurso = true;
+  notificar();
+  let exito = false;
+  try {
+    mostrarEstado(`${etiqueta}: confirma la solicitud en MetaMask.`);
+    const tx = await construir();
+    mostrarEstado(`${etiqueta}: transacción enviada. Esperando confirmación…`, 'info', tx.hash);
+    const recibo = await tx.wait();
+    if (!recibo || recibo.status !== 1) throw new Error('La transacción no fue exitosa.');
+    mostrarEstado(`${etiqueta}: transacción confirmada en Sepolia.`, 'success', tx.hash);
+    exito = true;
+  } catch (error) {
+    mostrarEstado(`${etiqueta}: ${textoError(error)}`, 'error');
+  } finally {
+    estado.txEnCurso = false;
+    await actualizarDatos();
+  }
+  return exito;
+}
+
+export async function comprarTokens(cantidadTexto) {
+  const d = estado.datos;
+  if (!d) return false;
+  let cantidad;
+  try { cantidad = cantidadEntera(cantidadTexto); } catch (error) { mostrarEstado(error.message, 'error'); return false; }
+  const costo = d.precioToken * BigInt(cantidad);
+  return ejecutarTransaccion(`Comprar ${cantidad} ${estado.simbolo}`, () =>
+    estado.wallet.token.comprarTokens(BigInt(cantidad), { value: costo }));
+}
+
+export async function aprobarTokens(cantidadTexto) {
+  const d = estado.datos;
+  if (!d || d.sorteoRealizado) return false;
+  let cantidad;
+  try { cantidad = cantidadEntera(cantidadTexto, d.maxPorCompra); } catch (error) { mostrarEstado(error.message, 'error'); return false; }
+  const costo = d.precioBoleto * BigInt(cantidad);
+  return ejecutarTransaccion(`Autorizar ${formatoUnidad(costo, d.decimales)} ${estado.simbolo}`, () =>
+    estado.wallet.token.approve(DIRECCIONES.loteria, costo));
+}
+
+export async function comprarBoletos(cantidadTexto) {
+  const d = estado.datos;
+  if (!d || d.sorteoRealizado) return false;
+  let cantidad;
+  try { cantidad = cantidadEntera(cantidadTexto, d.maxPorCompra); } catch (error) { mostrarEstado(error.message, 'error'); return false; }
+  if (d.pausada) {
+    mostrarEstado('Las ventas están pausadas por el administrador.', 'error');
+    return false;
+  }
+  if (BigInt(cantidad) > d.restantes) {
+    mostrarEstado(`Solo puedes comprar ${d.restantes} boleto(s) más con esta cuenta.`, 'error');
+    return false;
+  }
+  const costo = d.precioBoleto * BigInt(cantidad);
+  if (d.saldoToken < costo) {
+    mostrarEstado(`No tienes suficientes ${estado.simbolo}. Primero compra tokens.`, 'error');
+    return false;
+  }
+  if (d.permiso < costo) {
+    mostrarEstado(`Falta autorización. Primero autoriza ${estado.simbolo} en el paso 2.`, 'error');
+    return false;
+  }
+  return ejecutarTransaccion(`Comprar ${cantidad} boleto(s) NFT`, () =>
+    estado.wallet.loteria.comprarBoletos(BigInt(cantidad)));
+}
+
+export async function pausarVentas() {
+  if (!estado.datos?.esAdmin || estado.datos.pausada) return false;
+  return ejecutarTransaccion('Pausar ventas', () => estado.wallet.loteria.pausar());
+}
+
+export async function reanudarVentas() {
+  if (!estado.datos?.esAdmin || !estado.datos.pausada) return false;
+  return ejecutarTransaccion('Reanudar ventas', () => estado.wallet.loteria.reanudar());
+}
+
+export async function ejecutarSorteo() {
+  const d = estado.datos;
+  if (!d?.esAdmin || d.sorteoRealizado || d.totalBoletos === 0n) return false;
+  return ejecutarTransaccion('Sortear y pagar premio', () => estado.wallet.loteria.sortearGanador());
+}
 
