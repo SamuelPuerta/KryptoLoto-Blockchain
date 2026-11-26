@@ -24,6 +24,7 @@
 .tl-ganador::before { border-color: var(--gold-400); box-shadow: 0 0 12px var(--gold-glow); }
 .tl-pausa::before { border-color: var(--warn); }
 .tl-reanuda::before { border-color: var(--info); }
+.tl-precio::before { border-color: var(--green-300); }
 .tl-item a { flex-shrink: 0; font-size: 0.75rem; color: var(--text-faint); text-decoration: none; white-space: nowrap; }
 .tl-item a:hover { color: var(--green-300); }
 .timeline .empty-state { margin-left: -22px; }

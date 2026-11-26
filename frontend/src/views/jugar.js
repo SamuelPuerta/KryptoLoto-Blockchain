@@ -84,6 +84,17 @@ function pintarAsistente(d) {
     return;
   }
   const sim = estado.simbolo;
+  const base = Number(d.precioBoletoTokens);
+  if (Number.isSafeInteger(base) && base > 0) {
+    const mults = base * 10 <= 100000 ? [1, 4, 10] : [1, 2, 4];
+    const sugeridos = mults.map((m) => Math.min(100000, base * m));
+    $$('.chip').forEach((chip, i) => {
+      const val = sugeridos[i];
+      if (!val) return;
+      chip.dataset.klt = String(val);
+      chip.textContent = String(val);
+    });
+  }
   const maxQty = maximoBoletos(d);
   $('cantidadBoletos').max = String(maxQty);
   if (cantidadBoletos() > maxQty) $('cantidadBoletos').value = String(maxQty);

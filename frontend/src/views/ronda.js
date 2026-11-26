@@ -14,6 +14,9 @@ function textoEvento(item, d) {
   if (item.tipo === 'ganador') {
     return `Boleto #${item.boleto} ganó ${formatoUnidad(item.premio, d?.decimales ?? 18)} ${estado.simbolo} · ${abreviar(item.receptor)}`;
   }
+  if (item.tipo === 'precio') {
+    return `Precio del boleto actualizado: ${item.anterior} → ${item.nuevo} ${estado.simbolo}`;
+  }
   return item.tipo === 'pausa' ? 'Ventas pausadas por el administrador' : 'Ventas reanudadas';
 }
 
