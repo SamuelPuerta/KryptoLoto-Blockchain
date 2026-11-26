@@ -51,6 +51,87 @@
         </header>
 
         <main class="views" id="inicio">
+          <section class="view" data-view="jugar" aria-labelledby="tituloJugar">
+            <h2 class="sr-only" id="tituloJugar">Jugar</h2>
+            <div class="play-grid">
+              <article class="pot-card">
+                <div class="pot-top">
+                  <span class="eyebrow">PREMIO ACUMULADO</span>
+                  <span class="round-pill" id="roundPill">Conecta tu wallet</span>
+                </div>
+                <p class="pot-amount"><span id="totalPrize">—</span></p>
+                <p class="pot-caption">Se paga en <span class="sym">KLT</span> al titular actual del NFT ganador.</p>
+                <dl class="pot-facts">
+                  <div><dt>Boletos vendidos</dt><dd id="totalTickets">—</dd></div>
+                  <div><dt>Compradores</dt><dd id="uniqueBuyers">—</dd></div>
+                  <div><dt>Próximo boleto</dt><dd id="nextTicket">—</dd></div>
+                  <div><dt>Precio por boleto</dt><dd id="ticketPriceBadge">—</dd></div>
+                </dl>
+                <div class="winner-block" id="winnerBlock" hidden>
+                  <span class="eyebrow eyebrow-gold">GANADOR</span>
+                  <div class="winner-row"><span>Boleto</span><strong id="winnerTicket">—</strong></div>
+                  <div class="winner-row"><span>Titular</span><code id="winnerAddress">—</code></div>
+                  <div class="winner-row"><span>Premio pagado</span><strong id="paidPrize">—</strong></div>
+                  <button class="btn btn-outline btn-compact" id="btnShowWinner" type="button">Ver resultado ✦</button>
+                </div>
+              </article>
+
+              <article class="wizard-card">
+                <header class="wizard-head">
+                  <h3>Tu jugada</h3>
+                  <p>Tres pasos. Cada acción se firma en MetaMask; nunca compartimos tus claves.</p>
+                </header>
+                <ol class="stepper" aria-label="Progreso de la jugada">
+                  <li><button class="step-node" id="stepBuy" data-step="buy" data-state="current" type="button"><i>1</i><span>Fondear</span></button></li>
+                  <li><button class="step-node" id="stepApprove" data-step="approve" data-state="locked" type="button"><i>2</i><span>Autorizar</span></button></li>
+                  <li><button class="step-node" id="stepTickets" data-step="tickets" data-state="locked" type="button"><i>3</i><span>Boletos</span></button></li>
+                </ol>
+
+                <div class="wiz-panel" data-panel="buy">
+                  <h4>Compra tokens <span class="sym">KLT</span> con ETH de prueba</h4>
+                  <div class="chips" role="group" aria-label="Cantidades sugeridas">
+                    <button class="chip" type="button" data-klt="25">25</button>
+                    <button class="chip" type="button" data-klt="100">100</button>
+                    <button class="chip" type="button" data-klt="250">250</button>
+                  </div>
+                  <label for="cantidadLOT">Cantidad de <span class="sym">KLT</span></label>
+                  <input id="cantidadLOT" type="number" inputmode="numeric" value="100" min="1" max="100000" step="1" />
+                  <p class="hint" id="ethPriceHint">Conecta MetaMask para ver el precio.</p>
+                  <button class="btn btn-action" id="btnBuyLOT" type="button" disabled>Comprar <span class="sym">KLT</span> <span aria-hidden="true">↗</span></button>
+                </div>
+
+                <div class="wiz-panel" data-panel="approve" hidden>
+                  <h4>Autoriza el gasto de tus <span class="sym">KLT</span></h4>
+                  <p class="panel-text"><code>approve</code> permite que <code>Loteria</code> use tus tokens. <strong>No transfiere nada todavía.</strong></p>
+                  <label for="cantidadBoletos">Boletos que quieres comprar</label>
+                  <div class="qty">
+                    <button class="qty-btn" id="btnQtyMinus" type="button" aria-label="Quitar un boleto">−</button>
+                    <input id="cantidadBoletos" type="number" inputmode="numeric" value="2" min="1" max="4" step="1" />
+                    <button class="qty-btn" id="btnQtyPlus" type="button" aria-label="Agregar un boleto">+</button>
+                  </div>
+                  <p class="hint" id="ticketPriceHint">Conecta MetaMask para ver el precio.</p>
+                  <button class="btn btn-action" id="btnApprove" type="button" disabled>Autorizar <span class="sym">KLT</span> <span aria-hidden="true">↗</span></button>
+                </div>
+
+                <div class="wiz-panel" data-panel="tickets" hidden>
+                  <h4>Compra tus boletos NFT</h4>
+                  <p class="panel-text"><code>transferFrom</code> cobra los <span class="sym">KLT</span> y el contrato emite un NFT por cada boleto.</p>
+                  <dl class="summary">
+                    <div><dt>Boletos</dt><dd id="ticketQtyEcho">—</dd></div>
+                    <div><dt>Costo</dt><dd id="ticketCost">—</dd></div>
+                    <div><dt>Autorización disponible</dt><dd id="allowance">—</dd></div>
+                  </dl>
+                  <p class="hint" id="salesNote"></p>
+                  <button class="btn btn-action" id="btnBuyTickets" type="button" disabled>Comprar boletos <span aria-hidden="true">↗</span></button>
+                </div>
+
+                <div class="wiz-panel" data-panel="closed" hidden>
+                  <h4>La ronda terminó</h4>
+                  <p class="panel-text">Esta versión tiene una sola ronda: ya no se aceptan boletos ni sorteos. Mira el resultado en el panel del premio.</p>
+                </div>
+              </article>
+            </div>
+          </section>
 
 
 

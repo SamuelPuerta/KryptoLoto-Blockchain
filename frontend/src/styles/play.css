@@ -1,0 +1,87 @@
+/* ---------- Vista «Jugar»: premio + asistente ---------- */
+.play-grid { display: grid; grid-template-columns: minmax(0, 1.05fr) minmax(0, 0.95fr); gap: 20px; align-items: stretch; }
+
+.pot-card {
+  position: relative; display: flex; flex-direction: column; gap: 16px; padding: 34px; overflow: hidden;
+  background:
+    radial-gradient(520px 320px at 85% -10%, rgba(242, 193, 78, 0.22), transparent 70%),
+    radial-gradient(420px 300px at 0 110%, rgba(16, 185, 129, 0.18), transparent 70%),
+    var(--bg-elevated);
+  border: 1px solid rgba(242, 193, 78, 0.28); border-radius: 28px; box-shadow: var(--shadow-card);
+}
+/* Muescas laterales: el premio se ve como un boleto. */
+.pot-card::before, .pot-card::after {
+  content: ''; position: absolute; top: 56%; width: 30px; height: 30px; border-radius: 50%; background: var(--bg);
+  border: 1px solid rgba(242, 193, 78, 0.28);
+}
+.pot-card::before { left: -16px; }
+.pot-card::after { right: -16px; }
+.pot-top { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+.pot-top .eyebrow { color: var(--gold-400); }
+.round-pill { padding: 6px 12px; font-size: 0.75rem; font-weight: 600; color: var(--text-muted); background: var(--surface); border: 1px solid var(--border); border-radius: 999px; }
+.round-pill.is-open { color: var(--ok); border-color: rgba(52, 211, 153, 0.4); background: rgba(52, 211, 153, 0.08); }
+.round-pill.is-paused { color: var(--warn); border-color: rgba(251, 191, 36, 0.4); background: rgba(251, 191, 36, 0.08); }
+.round-pill.is-closed { color: var(--gold-400); border-color: rgba(242, 193, 78, 0.45); background: rgba(242, 193, 78, 0.08); }
+
+.pot-amount {
+  margin-top: 8px; font-size: clamp(2.6rem, 6vw, 4.8rem); font-weight: 800; line-height: 1.02; letter-spacing: -0.05em;
+  font-variant-numeric: tabular-nums; word-break: break-word;
+}
+.pot-amount span {
+  background: linear-gradient(120deg, #fff1c2, var(--gold-400) 55%, #d99a1f); -webkit-background-clip: text; background-clip: text; color: transparent;
+}
+.pot-caption { color: var(--text-muted); font-size: 0.93rem; }
+.pot-facts {
+  display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 18px 20px; margin-top: auto; padding-top: 24px;
+  border-top: 1px dashed rgba(242, 193, 78, 0.32);
+}
+.pot-facts dt { font-size: 0.74rem; color: var(--text-faint); letter-spacing: 0.04em; }
+.pot-facts dd { margin-top: 2px; font-size: 1.3rem; font-weight: 700; letter-spacing: -0.03em; font-variant-numeric: tabular-nums; }
+
+.winner-block { display: grid; gap: 8px; padding: 16px 18px; background: rgba(242, 193, 78, 0.07); border: 1px solid rgba(242, 193, 78, 0.35); border-radius: var(--radius-md); box-shadow: 0 0 40px var(--gold-glow); }
+.winner-row { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; font-size: 0.9rem; color: var(--text-muted); }
+.winner-row strong { color: var(--text); }
+.winner-row code { color: var(--gold-400); background: rgba(242, 193, 78, 0.1); }
+.winner-block .btn { justify-self: start; margin-top: 4px; }
+
+/* ---------- Asistente de tres pasos ---------- */
+.wizard-card {
+  display: flex; flex-direction: column; gap: 22px; padding: 30px;
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.05), rgba(255, 255, 255, 0.02)), var(--bg-elevated);
+  border: 1px solid var(--border); border-radius: 28px; box-shadow: var(--shadow-card);
+}
+.wizard-head h3 { font-size: 1.5rem; font-weight: 700; letter-spacing: -0.035em; }
+.wizard-head p { margin-top: 4px; color: var(--text-muted); font-size: 0.9rem; }
+
+.stepper { display: grid; grid-template-columns: repeat(3, 1fr); }
+.stepper li { position: relative; }
+.stepper li:not(:last-child)::after { content: ''; position: absolute; top: 19px; left: calc(50% + 26px); right: calc(-50% + 26px); height: 2px; background: var(--border-strong); }
+.step-node { display: grid; justify-items: center; gap: 8px; width: 100%; padding: 0; font: inherit; font-size: 0.8rem; font-weight: 600; color: var(--text-muted); background: none; border: 0; cursor: pointer; }
+.step-node i {
+  display: grid; place-items: center; width: 38px; height: 38px; font-style: normal; font-weight: 700; color: var(--text-muted);
+  background: var(--bg-elevated); border: 2px solid var(--border-strong); border-radius: 50%; transition: all 0.3s var(--ease);
+}
+.step-node[data-state='current'] i { color: var(--green-300); border-color: var(--green-500); box-shadow: 0 0 0 5px rgba(16, 185, 129, 0.16); }
+.step-node[data-state='done'] i { font-size: 0; background: var(--green-500); border-color: var(--green-500); }
+.step-node[data-state='done'] i::after { content: '✓'; font-size: 1rem; color: #03150e; }
+.step-node[data-state='locked'] { opacity: 0.45; cursor: not-allowed; }
+.step-node.is-viewing { color: var(--text); }
+
+.wiz-panel { display: grid; gap: 14px; animation: panel-in 0.4s var(--ease) both; }
+@keyframes panel-in { from { opacity: 0; transform: translateX(10px); } }
+.wiz-panel h4 { font-size: 1.12rem; font-weight: 700; letter-spacing: -0.025em; }
+.chips { display: flex; gap: 8px; }
+.chip { padding: 8px 16px; font: inherit; font-size: 0.85rem; font-weight: 600; color: var(--green-300); background: rgba(16, 185, 129, 0.1); border: 1px solid rgba(16, 185, 129, 0.28); border-radius: 999px; cursor: pointer; transition: background 0.2s; }
+.chip:hover { background: rgba(16, 185, 129, 0.2); }
+.qty { display: grid; grid-template-columns: 52px 1fr 52px; gap: 8px; }
+.qty input { text-align: center; font-size: 1.3rem; font-weight: 600; }
+.qty-btn { font: inherit; font-size: 1.4rem; color: var(--text); background: var(--surface); border: 1px solid var(--border-strong); border-radius: var(--radius-sm); cursor: pointer; transition: background 0.2s; }
+.qty-btn:hover { background: var(--surface-hover); }
+.summary { display: grid; gap: 0; border: 1px solid var(--border); border-radius: var(--radius-md); }
+.summary div { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; padding: 12px 16px; font-size: 0.9rem; }
+.summary div + div { border-top: 1px solid var(--border); }
+.summary dt { color: var(--text-muted); }
+.summary dd { font-weight: 600; font-variant-numeric: tabular-nums; text-align: right; }
+
+@media (max-width: 1000px) { .play-grid { grid-template-columns: minmax(0, 1fr); } }
+@media (max-width: 520px) { .pot-card, .wizard-card { padding: 22px; border-radius: 22px; } }
