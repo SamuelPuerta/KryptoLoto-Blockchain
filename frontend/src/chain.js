@@ -137,6 +137,7 @@ export async function actualizarDatos() {
         esMio: titulares[i].toLowerCase() === cuenta.toLowerCase(),
       })),
     };
+    leerActividad(); // sin await: no bloquea el resto de la interfaz
   } catch (error) {
     estado.datos = null;
     mostrarEstado(`No se pudieron leer los contratos: ${textoError(error)}`, 'error');
@@ -230,3 +231,47 @@ export async function ejecutarSorteo() {
   return ejecutarTransaccion('Sortear y pagar premio', () => estado.wallet.loteria.sortearGanador());
 }
 
+const BLOQUES_RECIENTES = 9000;
+
+/** Eventos recientes de Loteria (compras, pausas y sorteo), del más nuevo al más antiguo. */
+export async function leerActividad() {
+  if (!estado.wallet) return;
+  try {
+    const { provider, loteria } = estado.wallet;
+    const cabeza = await provider.getBlockNumber();
+    const desde = BLOQUE_DESPLIEGUE ?? Math.max(0, cabeza - BLOQUES_RECIENTES);
+    const [compras, sorteos, pausas, reanudaciones] = await Promise.all([
+      loteria.queryFilter(loteria.filters.BoletosComprados(), desde),
+      loteria.queryFilter(loteria.filters.GanadorSeleccionado(), desde),
+      loteria.queryFilter(loteria.filters.Paused(), desde),
+      loteria.queryFilter(loteria.filters.Unpaused(), desde),
+    ]);
+    const lista = [
+      ...compras.map((e) => ({ tipo: 'compra', e, comprador: e.args.comprador, cantidad: e.args.cantidad })),
+      ...sorteos.map((e) => ({ tipo: 'ganador', e, boleto: e.args.numeroBoleto, receptor: e.args.receptorPremio, premio: e.args.cantidadKLT })),
+      ...pausas.map((e) => ({ tipo: 'pausa', e })),
+      ...reanudaciones.map((e) => ({ tipo: 'reanuda', e })),
+    ].map(({ e, ...resto }) => ({ ...resto, bloque: e.blockNumber, indice: e.index, hash: e.transactionHash }));
+    lista.sort((a, b) => b.bloque - a.bloque || b.indice - a.indice);
+    estado.actividad = lista.slice(0, 12);
+  } catch {
+    // La actividad es informativa: si el proveedor limita getLogs, no afecta el resto.
+    estado.actividad = [];
+  }
+  notificar();
+}
+
+/** Lee la función propia configurada en mejora.js directamente del contrato. */
+export async function consultarMejora() {
+  if (!estado.wallet || !MEJORA.activa) return null;
+  if (!['token', 'nft', 'loteria'].includes(MEJORA.contrato)) throw new Error('contrato debe ser token, nft o loteria.');
+  if (!['ninguno', 'cuenta'].includes(MEJORA.argumento)) throw new Error('argumento debe ser ninguno o cuenta.');
+  const instancia = new Contract(DIRECCIONES[MEJORA.contrato], [MEJORA.firma], estado.wallet.provider);
+  const args = MEJORA.argumento === 'cuenta' ? [estado.cuenta] : [];
+  const lectura = await instancia[MEJORA.funcion](...args);
+  const texto = typeof lectura === 'bigint' ? lectura.toString()
+    : typeof lectura === 'boolean' ? (lectura ? 'Sí' : 'No')
+      : Array.isArray(lectura) ? lectura.map(String).join(', ')
+        : String(lectura);
+  return `${texto}${MEJORA.sufijo ? ` ${MEJORA.sufijo}` : ''}`;
+}
