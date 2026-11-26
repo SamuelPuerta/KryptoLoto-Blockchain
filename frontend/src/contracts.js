@@ -11,9 +11,9 @@ export const RED_SEPOLIA = {
 };
 
 export const DIRECCIONES = {
-  token: '0x0000000000000000000000000000000000000000', // LoteriaToken
-  nft: '0x0000000000000000000000000000000000000000', // BoletoNFT
-  loteria: '0x0000000000000000000000000000000000000000', // Loteria
+  token: '0x41d66ADf49094b06212Be01dc1F2C569E8bd3406', // LoteriaToken
+  nft: '0xd71A7349C569523B3E8C36BFDfe82599a746bdA7', // BoletoNFT
+  loteria: '0x723BC6cD44504b23a82465210928D0425d3137B2', // Loteria
 };
 
 /**
@@ -21,7 +21,7 @@ export const DIRECCIONES = {
  * Con null, la actividad reciente lee los últimos ~9000 bloques;
  * con el número real, lee todo el historial desde el despliegue.
  */
-export const BLOQUE_DESPLIEGUE = null;
+export const BLOQUE_DESPLIEGUE = 12217394;
 
 /**
  * ABI mínima: solo las funciones y eventos que usa la interfaz,
