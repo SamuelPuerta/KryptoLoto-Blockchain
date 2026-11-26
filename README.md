@@ -28,6 +28,7 @@ Los tres contratos están en [`contracts/KryptoLoto.sol`](contracts/KryptoLoto.s
 - **Pausar y reanudar ventas:** solo el administrador; mientras está pausada no se compran boletos.
 - **Límite acumulado por participante:** una dirección no puede superar un máximo total de boletos.
 - **Compradores únicos:** estadística consultable de cuántas direcciones distintas han comprado.
+- **Precio de boleto configurable:** solo el administrador puede ajustar el precio en KLT mientras la ronda siga abierta (valor inicial: 25 KLT).
 
 El detalle de cada mejora y cómo verificarla está en [`docs/mejoras.md`](docs/mejoras.md).
 
@@ -40,7 +41,7 @@ Aplicación Vite + JavaScript en [`frontend/`](frontend/), con ethers.js v6 y Me
 | **Jugar** | Muestra el premio acumulado y el estado de la ronda, y guía la jugada en tres pasos: fondear con KLT, autorizar el gasto y comprar los boletos. |
 | **Boletos** | Billetera de NFTs del usuario, con el cupo restante de su cuenta y el boleto ganador marcado. |
 | **Ronda** | Reglas leídas del contrato, verificación en vivo de la función propia y actividad reciente tomada de los eventos. |
-| **Admin** | Solo para el administrador: pausar y reanudar ventas, y sorteo con lista de condiciones previas y confirmación. |
+| **Admin** | Solo para el administrador: pausar y reanudar ventas, configurar el precio del boleto, y sorteo con lista de condiciones previas y confirmación. |
 
 Además:
 

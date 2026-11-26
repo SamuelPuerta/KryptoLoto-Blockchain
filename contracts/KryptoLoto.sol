@@ -80,7 +80,8 @@ contract Loteria is Ownable, ReentrancyGuard, Pausable {
     LoteriaToken public token;
     BoletoNFT public boletoNFT;
 
-    uint256 public constant PRECIO_BOLETO_TOKENS = 25;
+    // MEJORA 4: precio de boleto configurable por el administrador (por defecto 25 KLT).
+    uint256 public precioBoletoTokens = 25;
     uint256 public constant MAX_BOLETOS_POR_COMPRA = 4;
 
     // MEJORA 2: limite acumulado de boletos por participante. Cuenta los
@@ -122,6 +123,11 @@ contract Loteria is Ownable, ReentrancyGuard, Pausable {
         uint256 cantidadKLT
     );
 
+    event PrecioBoletoActualizado(
+        uint256 precioAnterior,
+        uint256 precioNuevo
+    );
+
     constructor(address direccionToken, address direccionNFT)
         Ownable(msg.sender)
     {
@@ -143,8 +149,28 @@ contract Loteria is Ownable, ReentrancyGuard, Pausable {
         _unpause();
     }
 
+    // MEJORA 4: configurar el precio del boleto en tokens KLT (solo administrador).
+    // Solo aplica a las compras futuras mientras la ronda siga abierta.
+    function cambiarPrecioBoleto(uint256 nuevoPrecioTokens) external onlyOwner {
+        require(!sorteoRealizado, "La loteria ya fue sorteada");
+        require(nuevoPrecioTokens > 0, "El precio debe ser mayor que cero");
+        require(
+            nuevoPrecioTokens != precioBoletoTokens,
+            "El precio ya tiene ese valor"
+        );
+
+        uint256 precioAnterior = precioBoletoTokens;
+        precioBoletoTokens = nuevoPrecioTokens;
+        emit PrecioBoletoActualizado(precioAnterior, nuevoPrecioTokens);
+    }
+
+    // Alias de compatibilidad para integraciones que consulten PRECIO_BOLETO_TOKENS().
+    function PRECIO_BOLETO_TOKENS() external view returns (uint256) {
+        return precioBoletoTokens;
+    }
+
     function precioBoletoEnUnidades() public view returns (uint256) {
-        return PRECIO_BOLETO_TOKENS * 10 ** token.decimals();
+        return precioBoletoTokens * 10 ** token.decimals();
     }
 
     function totalBoletos() external view returns (uint256) {
