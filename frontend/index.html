@@ -158,6 +158,43 @@
             </div>
           </section>
 
+          <section class="view" data-view="ronda" hidden aria-labelledby="tituloRonda">
+            <h2 class="sr-only" id="tituloRonda">Ronda</h2>
+            <div class="round-grid">
+              <article class="rules-card">
+                <header class="card-head"><div><span class="eyebrow">REGLAS DEL CONTRATO</span><h3>Cómo funciona esta ronda</h3></div></header>
+                <dl class="rules">
+                  <div><dt>Estado de la ronda</dt><dd id="roundStatus">—</dd></div>
+                  <div><dt>Ventas</dt><dd id="salesStatus">—</dd></div>
+                  <div><dt>Precio del token</dt><dd id="ruleTokenPrice">—</dd></div>
+                  <div><dt>Precio por boleto</dt><dd id="ruleTicketPrice">—</dd></div>
+                  <div><dt>Máximo por compra</dt><dd id="ruleMaxBuy">—</dd></div>
+                  <div><dt>Límite por participante</dt><dd id="ruleMaxUser">—</dd></div>
+                </dl>
+                <div class="verify">
+                  <span class="eyebrow">VERIFICACIÓN EN VIVO</span>
+                  <h4 id="mejoraTitulo">Mejora propia</h4>
+                  <p class="panel-text" id="mejoraDescripcion">—</p>
+                  <p class="verify-result" id="mejoraResultado">—</p>
+                  <button class="btn btn-outline btn-compact" id="btnMejora" type="button" disabled>Consultar al contrato ↗</button>
+                </div>
+              </article>
+
+              <article class="activity-card">
+                <header class="card-head"><div><span class="eyebrow">EN LA CADENA</span><h3>Actividad reciente</h3></div></header>
+                <ol class="timeline" id="activityList"><li class="empty-state">Conecta MetaMask para ver la actividad.</li></ol>
+              </article>
+            </div>
+            <div class="round-foot">
+              <nav class="contract-chips" aria-label="Contratos desplegados">
+                <span>CONTRATOS EN SEPOLIA</span>
+                <a id="linkToken" target="_blank" rel="noopener noreferrer">LoteriaToken ↗</a>
+                <a id="linkNFT" target="_blank" rel="noopener noreferrer">BoletoNFT ↗</a>
+                <a id="linkLoteria" target="_blank" rel="noopener noreferrer">Loteria ↗</a>
+              </nav>
+              <p class="notice"><strong>Proyecto académico.</strong> El ETH de Sepolia no tiene valor real y los tokens no se devuelven por ETH. El ganador se elige con datos del bloque, algo <strong>no seguro para dinero real</strong>. Esta versión permite una sola ronda.</p>
+            </div>
+          </section>
 
         </main>
       </div>
