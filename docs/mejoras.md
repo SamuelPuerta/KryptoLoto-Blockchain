@@ -62,9 +62,9 @@ Este documento describe las mejoras funcionales implementadas sobre la base entr
 
 ## Interfaz
 
-El frontend muestra estas mejoras así:
+El frontend muestra estas mejoras en sus vistas:
 
-- Estado de las ventas (activas o pausadas) y botones de pausar y reanudar, visibles solo para el administrador.
-- Boletos restantes de la cuenta conectada, que bajan al comprar.
-- Número de compradores únicos.
-- El panel «Mejora funcional» consulta `boletosRestantes` directamente desde el contrato desplegado.
+- **Jugar:** el estado de la ronda («Ronda abierta» o «Ventas pausadas»), el número de compradores únicos y el aviso que bloquea la compra de boletos cuando las ventas están pausadas o la cuenta llegó a su límite.
+- **Boletos:** un anillo con el cupo de la cuenta conectada (boletos restantes de los 20 permitidos), que baja al comprar.
+- **Ronda:** las reglas leídas del contrato, el estado de las ventas, la actividad reciente (incluidas las pausas y reanudaciones) y el panel «Verificación en vivo», que consulta `boletosRestantes` directamente desde el contrato desplegado.
+- **Admin** (solo para el administrador): los botones de pausar y reanudar las ventas.
