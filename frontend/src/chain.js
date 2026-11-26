@@ -94,7 +94,7 @@ export async function actualizarDatos() {
   notificar();
   try {
     const { cuenta, provider, token, loteria, nft } = estado.wallet;
-    const [saldoETH, saldoToken, permiso, decimales, precioToken, precioBoleto, maxPorCompra,
+    const [saldoETH, saldoToken, permiso, decimales, precioToken, precioBoleto, precioBoletoTokens, maxPorCompra,
       maxPorUsuario, totalBoletos, siguienteBoleto, premioAcumulado, premioPagado, sorteoRealizado,
       boletoGanador, ganador, ownerLoteria, ownerNFT, misBoletos, simbolo, pausada, restantes,
       participantes] = await Promise.all([
@@ -104,6 +104,7 @@ export async function actualizarDatos() {
       token.decimals(),
       token.PRECIO_TOKEN(),
       loteria.precioBoletoEnUnidades(),
+      loteria.PRECIO_BOLETO_TOKENS(),
       loteria.MAX_BOLETOS_POR_COMPRA(),
       loteria.MAX_BOLETOS_POR_USUARIO(),
       loteria.totalBoletos(),
@@ -126,7 +127,7 @@ export async function actualizarDatos() {
     estado.simbolo = simbolo;
     estado.datos = {
       saldoETH, saldoToken, permiso, decimales: Number(decimales), precioToken, precioBoleto,
-      maxPorCompra: Number(maxPorCompra), maxPorUsuario: Number(maxPorUsuario),
+      precioBoletoTokens, maxPorCompra: Number(maxPorCompra), maxPorUsuario: Number(maxPorUsuario),
       totalBoletos, siguienteBoleto, premioAcumulado, premioPagado, sorteoRealizado,
       boletoGanador, ganador, pausada, restantes, participantes,
       esAdmin: cuenta.toLowerCase() === ownerLoteria.toLowerCase(),
@@ -225,6 +226,24 @@ export async function reanudarVentas() {
   return ejecutarTransaccion('Reanudar ventas', () => estado.wallet.loteria.reanudar());
 }
 
+export async function cambiarPrecioBoleto(nuevoPrecioTexto) {
+  const d = estado.datos;
+  if (!d?.esAdmin || d.sorteoRealizado) return false;
+  let nuevoPrecio;
+  try {
+    nuevoPrecio = cantidadEntera(nuevoPrecioTexto, 500000);
+  } catch (error) {
+    mostrarEstado(error.message, 'error');
+    return false;
+  }
+  if (BigInt(nuevoPrecio) === d.precioBoletoTokens) {
+    mostrarEstado(`El precio del boleto ya es ${nuevoPrecio} ${estado.simbolo}.`, 'error');
+    return false;
+  }
+  return ejecutarTransaccion(`Cambiar precio a ${nuevoPrecio} ${estado.simbolo}`, () =>
+    estado.wallet.loteria.cambiarPrecioBoleto(BigInt(nuevoPrecio)));
+}
+
 export async function ejecutarSorteo() {
   const d = estado.datos;
   if (!d?.esAdmin || d.sorteoRealizado || d.totalBoletos === 0n) return false;
@@ -240,17 +259,19 @@ export async function leerActividad() {
     const { provider, loteria } = estado.wallet;
     const cabeza = await provider.getBlockNumber();
     const desde = BLOQUE_DESPLIEGUE ?? Math.max(0, cabeza - BLOQUES_RECIENTES);
-    const [compras, sorteos, pausas, reanudaciones] = await Promise.all([
+    const [compras, sorteos, pausas, reanudaciones, precios] = await Promise.all([
       loteria.queryFilter(loteria.filters.BoletosComprados(), desde),
       loteria.queryFilter(loteria.filters.GanadorSeleccionado(), desde),
       loteria.queryFilter(loteria.filters.Paused(), desde),
       loteria.queryFilter(loteria.filters.Unpaused(), desde),
+      loteria.queryFilter(loteria.filters.PrecioBoletoActualizado(), desde),
     ]);
     const lista = [
       ...compras.map((e) => ({ tipo: 'compra', e, comprador: e.args.comprador, cantidad: e.args.cantidad })),
       ...sorteos.map((e) => ({ tipo: 'ganador', e, boleto: e.args.numeroBoleto, receptor: e.args.receptorPremio, premio: e.args.cantidadKLT })),
       ...pausas.map((e) => ({ tipo: 'pausa', e })),
       ...reanudaciones.map((e) => ({ tipo: 'reanuda', e })),
+      ...precios.map((e) => ({ tipo: 'precio', e, anterior: e.args.precioAnterior, nuevo: e.args.precioNuevo })),
     ].map(({ e, ...resto }) => ({ ...resto, bloque: e.blockNumber, indice: e.index, hash: e.transactionHash }));
     lista.sort((a, b) => b.bloque - a.bloque || b.indice - a.indice);
     estado.actividad = lista.slice(0, 12);

@@ -11,9 +11,9 @@ export const RED_SEPOLIA = {
 };
 
 export const DIRECCIONES = {
-  token: '0x41d66ADf49094b06212Be01dc1F2C569E8bd3406', // LoteriaToken
-  nft: '0xd71A7349C569523B3E8C36BFDfe82599a746bdA7', // BoletoNFT
-  loteria: '0x723BC6cD44504b23a82465210928D0425d3137B2', // Loteria
+  token: '0x47b72AE1812CB84FDf8a0C077D40Ae6aC3D26134', // LoteriaToken
+  nft: '0xe264F04E4A8F53E6BE448120Bf713c6a5204b523', // BoletoNFT
+  loteria: '0xD3Ddc2bF71b9D44F7F4e66F0069f2273Dcb086B6', // Loteria
 };
 
 /**
@@ -46,6 +46,7 @@ export const ABI_NFT = [
 export const ABI_LOTERIA = [
   'function owner() view returns (address)',
   'function PRECIO_BOLETO_TOKENS() view returns (uint256)',
+  'function precioBoletoTokens() view returns (uint256)',
   'function MAX_BOLETOS_POR_COMPRA() view returns (uint256)',
   'function MAX_BOLETOS_POR_USUARIO() view returns (uint256)',
   'function premioAcumulado() view returns (uint256)',
@@ -64,10 +65,12 @@ export const ABI_LOTERIA = [
   'function sortearGanador()',
   'function pausar()',
   'function reanudar()',
+  'function cambiarPrecioBoleto(uint256 nuevoPrecioTokens)',
   'event BoletosComprados(address indexed comprador, uint256 cantidad, uint256 costoTotal)',
   'event GanadorSeleccionado(uint256 indexed numeroBoleto, address indexed receptorPremio, uint256 cantidadKLT)',
   'event Paused(address account)',
   'event Unpaused(address account)',
+  'event PrecioBoletoActualizado(uint256 precioAnterior, uint256 precioNuevo)',
   'error EnforcedPause()',
 ];
 
