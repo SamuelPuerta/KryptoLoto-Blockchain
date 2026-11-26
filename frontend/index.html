@@ -236,6 +236,21 @@
       </div>
     </div>
 
+    <div class="modal modal-winner" id="winnerModal" role="dialog" aria-modal="true" aria-labelledby="modalHeadline" hidden>
+      <div class="confetti" id="confetti" aria-hidden="true"></div>
+      <div class="modal-sheet">
+        <span class="eyebrow eyebrow-gold">SORTEO REALIZADO</span>
+        <h3 id="modalHeadline">Ya hay ganador</h3>
+        <p class="winner-ticket">#<strong id="modalTicket">—</strong></p>
+        <p class="modal-line">Titular: <code id="modalAddress">—</code></p>
+        <p class="modal-line">Premio: <strong id="modalPrize">—</strong></p>
+        <p class="modal-you" id="modalYou"></p>
+        <div class="modal-actions">
+          <a class="btn btn-outline" id="modalLink" target="_blank" rel="noopener noreferrer">Ver en Etherscan ↗</a>
+          <button class="btn btn-draw" id="modalClose" type="button">Cerrar</button>
+        </div>
+      </div>
+    </div>
 
     <div id="statusToast" class="toast" role="status" aria-live="polite" hidden><span id="toastMessage"></span><a id="toastLink" target="_blank" rel="noopener noreferrer" hidden>Ver transacción ↗</a><button id="closeToast" aria-label="Cerrar aviso" type="button">×</button></div>
     <script type="module" src="/src/main.js"></script>

@@ -14,3 +14,21 @@
 @keyframes fade-in { from { opacity: 0; } }
 @keyframes sheet-in { from { opacity: 0; transform: translateY(18px) scale(0.97); } }
 
+/* ---------- Resultado del sorteo ---------- */
+.modal-winner .modal-sheet { text-align: center; border-color: rgba(242, 193, 78, 0.5); box-shadow: 0 40px 100px rgba(0, 0, 0, 0.6), 0 0 80px var(--gold-glow); }
+.winner-ticket { font-size: 1.1rem; color: var(--text-muted); }
+.modal-sheet .winner-ticket { color: var(--gold-400); }
+.winner-ticket strong { font-size: clamp(3.4rem, 12vw, 5.2rem); font-weight: 800; line-height: 1; letter-spacing: -0.05em; }
+.modal-line { font-size: 0.95rem; }
+.modal-line code { color: var(--gold-400); background: rgba(242, 193, 78, 0.1); }
+.modal-you { min-height: 1.4em; color: var(--gold-400) !important; font-weight: 600; }
+.modal-winner .modal-actions { justify-content: center; }
+
+.confetti { position: absolute; inset: 0; overflow: hidden; pointer-events: none; }
+.confetti i {
+  position: absolute; top: -16px; left: var(--x); width: 9px; height: 16px; border-radius: 2px; background: var(--gold-400);
+  transform: rotate(var(--r)); animation: caer var(--t) linear var(--d) infinite;
+}
+.confetti i:nth-child(3n) { background: var(--green-300); }
+.confetti i:nth-child(3n + 1) { background: #fff1c2; width: 7px; }
+@keyframes caer { to { transform: translateY(110vh) rotate(calc(var(--r) + 540deg)); } }

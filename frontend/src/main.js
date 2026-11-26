@@ -6,6 +6,7 @@ import { iniciarCartera } from './views/cartera.js';
 import { iniciarRonda } from './views/ronda.js';
 import { iniciarModalConfirmacion } from './modal.js';
 import { iniciarAdmin } from './views/admin.js';
+import { iniciarGanador } from './views/ganador.js';
 
 iniciarToast();
 iniciarJugar();
@@ -13,4 +14,5 @@ iniciarCartera();
 iniciarRonda();
 iniciarModalConfirmacion();
 iniciarAdmin();
+iniciarGanador();
 iniciarShell();
