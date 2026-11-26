@@ -88,6 +88,11 @@ contract Loteria is Ownable, ReentrancyGuard, Pausable {
     uint256 public constant MAX_BOLETOS_POR_USUARIO = 20;
     mapping(address => uint256) public boletosComprados;
 
+    // MEJORA 3: estadistica de compradores unicos (direcciones distintas
+    // que han comprado al menos un boleto).
+    uint256 public totalParticipantes;
+    mapping(address => bool) public yaParticipo;
+
     uint256 public siguienteBoleto = 1;
     uint256 public premioAcumulado; // Unidades minimas del ERC-20 KLT.
 
@@ -191,6 +196,10 @@ contract Loteria is Ownable, ReentrancyGuard, Pausable {
             siguienteBoleto++;
         }
 
+        if (!yaParticipo[msg.sender]) {
+            yaParticipo[msg.sender] = true;
+            totalParticipantes++;
+        }
         boletosComprados[msg.sender] += cantidad;
         premioAcumulado += costoTotal;
         emit BoletosComprados(msg.sender, cantidad, costoTotal);
