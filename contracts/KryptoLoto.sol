@@ -7,6 +7,7 @@ import "@openzeppelin/contracts@5.7.0/token/ERC20/ERC20.sol";
 import "@openzeppelin/contracts@5.7.0/token/ERC721/ERC721.sol";
 import "@openzeppelin/contracts@5.7.0/access/Ownable.sol";
 import "@openzeppelin/contracts@5.7.0/utils/ReentrancyGuard.sol";
+import "@openzeppelin/contracts@5.7.0/utils/Pausable.sol";
 
 // -------------------------------------------------------------
 // 1. LOTERIATOKEN: el ERC-20 (KLT) que los participantes compran con ETH
@@ -75,7 +76,7 @@ contract BoletoNFT is ERC721, Ownable {
 // -------------------------------------------------------------
 // 3. LOTERIA: compra de boletos, sorteo y pago del premio en KLT
 // -------------------------------------------------------------
-contract Loteria is Ownable, ReentrancyGuard {
+contract Loteria is Ownable, ReentrancyGuard, Pausable {
     LoteriaToken public token;
     BoletoNFT public boletoNFT;
 
@@ -121,6 +122,17 @@ contract Loteria is Ownable, ReentrancyGuard {
         boletoNFT = BoletoNFT(direccionNFT);
     }
 
+    // MEJORA 1: pausar y reanudar la venta de boletos (solo administrador).
+    // Mientras este pausada, comprarBoletos revierte. El sorteo sigue
+    // permitido para que el administrador pueda cerrar la ronda.
+    function pausar() external onlyOwner {
+        _pause();
+    }
+
+    function reanudar() external onlyOwner {
+        _unpause();
+    }
+
     function precioBoletoEnUnidades() public view returns (uint256) {
         return PRECIO_BOLETO_TOKENS * 10 ** token.decimals();
     }
@@ -129,7 +141,11 @@ contract Loteria is Ownable, ReentrancyGuard {
         return siguienteBoleto - 1;
     }
 
-    function comprarBoletos(uint256 cantidad) external nonReentrant {
+    function comprarBoletos(uint256 cantidad)
+        external
+        nonReentrant
+        whenNotPaused
+    {
         require(!sorteoRealizado, "La loteria ya fue sorteada");
         require(cantidad > 0, "Debe comprar al menos un boleto");
         require(
