@@ -1,0 +1,66 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <meta name="theme-color" content="#050d0a" />
+    <meta name="description" content="KryptoLoto: lotería descentralizada académica con token ERC-20 y boletos NFT ERC-721 en Ethereum Sepolia" />
+    <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='9' fill='%2310b981'/%3E%3Cpath d='M10 8v16M10 16l9-8M10 16l9 8' stroke='%23050d0a' stroke-width='3' stroke-linecap='round' fill='none'/%3E%3C/svg%3E" />
+    <title>KryptoLoto · Jugar</title>
+  </head>
+  <body>
+    <div class="app">
+      <aside class="rail" aria-label="Navegación principal">
+        <a class="rail-logo" href="#jugar" aria-label="KryptoLoto">
+          <svg viewBox="0 0 32 32" width="22" height="22" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" aria-hidden="true"><path d="M10 7v18M10 16l10-9M10 16l10 9" /></svg>
+        </a>
+        <nav class="rail-nav">
+          <a href="#jugar" data-nav="jugar">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M13 2 4 14h7l-1 8 9-12h-7z" /></svg>
+            <span>Jugar</span>
+          </a>
+          <a href="#cartera" data-nav="cartera">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 8a2 2 0 0 0 0 8v2a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1v-2a2 2 0 0 1 0-8V6a1 1 0 0 0-1-1H5a1 1 0 0 0-1 1z" /><path d="M14 5v14" stroke-dasharray="2 2.5" /></svg>
+            <span>Boletos</span>
+            <b class="nav-badge" id="navTickets" hidden>0</b>
+          </a>
+          <a href="#ronda" data-nav="ronda">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 12h4l3-7 4 14 3-7h4" /></svg>
+            <span>Ronda</span>
+          </a>
+          <a href="#admin" data-nav="admin" id="navAdmin" hidden>
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3 4 6v6c0 5 3.5 8 8 9 4.5-1 8-4 8-9V6z" /></svg>
+            <span>Admin</span>
+          </a>
+        </nav>
+      </aside>
+
+      <div class="stage">
+        <header class="topbar">
+          <div class="topbar-title"><strong>KryptoLoto</strong><small id="viewTitle">Jugar</small></div>
+          <div class="topbar-actions">
+            <span class="network-pill" id="networkPill"><span class="status-dot"></span><span class="pill-text">Sepolia · sin conectar</span></span>
+            <div class="wallet-chip" id="walletChip" hidden>
+              <span class="chip-balance"><b id="lotBalance">—</b></span>
+              <span class="chip-balance chip-eth" id="ethBalance">—</span>
+              <code id="accountText">—</code>
+            </div>
+            <button class="btn btn-primary btn-compact" id="btnConnect" type="button">Conectar MetaMask</button>
+            <button class="icon-btn" id="btnRefresh" type="button" aria-label="Actualizar datos" title="Actualizar datos" disabled>↻</button>
+          </div>
+        </header>
+
+        <main class="views" id="inicio">
+
+
+
+        </main>
+      </div>
+    </div>
+
+
+
+    <div id="statusToast" class="toast" role="status" aria-live="polite" hidden><span id="toastMessage"></span><a id="toastLink" target="_blank" rel="noopener noreferrer" hidden>Ver transacción ↗</a><button id="closeToast" aria-label="Cerrar aviso" type="button">×</button></div>
+    <script type="module" src="/src/main.js"></script>
+  </body>
+</html>

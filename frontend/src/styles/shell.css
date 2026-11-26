@@ -1,0 +1,97 @@
+/* ---------- Estructura de la app: riel lateral + escenario ---------- */
+.app { display: grid; grid-template-columns: 92px minmax(0, 1fr); min-height: 100vh; }
+
+.rail {
+  position: sticky; top: 0; z-index: 25; display: flex; flex-direction: column; align-items: center; gap: 30px;
+  height: 100vh; padding: 20px 10px; border-right: 1px solid var(--border);
+  background: rgba(5, 13, 10, 0.55); backdrop-filter: blur(18px); -webkit-backdrop-filter: blur(18px);
+}
+.rail-logo {
+  display: grid; place-items: center; width: 46px; height: 46px; border-radius: 15px; color: var(--bg);
+  background: linear-gradient(135deg, var(--green-300), var(--green-500)); box-shadow: 0 8px 24px rgba(16, 185, 129, 0.35);
+}
+.rail-nav { display: grid; gap: 6px; width: 100%; }
+.rail-nav a {
+  position: relative; display: grid; justify-items: center; gap: 5px; padding: 11px 4px; border-radius: 14px;
+  font-size: 0.68rem; font-weight: 600; letter-spacing: 0.02em; text-decoration: none; color: var(--text-muted);
+  transition: color 0.2s, background 0.2s, box-shadow 0.2s;
+}
+.rail-nav svg { width: 22px; height: 22px; fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+.rail-nav a:hover { color: var(--text); background: var(--surface); }
+.rail-nav a.is-active { color: var(--green-300); background: rgba(16, 185, 129, 0.12); box-shadow: inset 0 0 0 1px rgba(16, 185, 129, 0.3); }
+.nav-badge {
+  position: absolute; top: 5px; right: 12px; display: grid; place-items: center; min-width: 18px; height: 18px; padding: 0 5px;
+  font-size: 0.65rem; font-weight: 700; color: #1b1405; background: var(--gold-400); border-radius: 999px;
+}
+
+.stage { min-width: 0; padding: 0 clamp(16px, 3vw, 44px) 56px; }
+.topbar {
+  position: sticky; top: 0; z-index: 20; display: flex; align-items: center; justify-content: space-between; gap: 14px; padding: 18px 0;
+  background: linear-gradient(var(--bg) 55%, rgba(5, 13, 10, 0));
+}
+.topbar-title { display: grid; line-height: 1.15; }
+.topbar-title strong { font-size: 1.4rem; letter-spacing: -0.035em; }
+.topbar-title small { color: var(--text-muted); font-size: 0.8rem; }
+.topbar-actions { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; justify-content: flex-end; }
+
+.network-pill {
+  display: inline-flex; align-items: center; gap: 8px; padding: 8px 13px; font-size: 0.78rem; color: var(--text-muted);
+  background: var(--surface); border: 1px solid var(--border); border-radius: 999px; white-space: nowrap;
+}
+.status-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--text-faint); }
+.network-pill.connected { color: var(--green-300); border-color: rgba(16, 185, 129, 0.35); }
+.network-pill.connected .status-dot { background: var(--green-500); box-shadow: 0 0 10px var(--green-500); }
+.network-pill.wrong { color: var(--warn); border-color: rgba(251, 191, 36, 0.4); }
+.network-pill.wrong .status-dot { background: var(--warn); }
+
+.wallet-chip { display: flex; align-items: center; gap: 12px; padding: 6px 8px 6px 14px; background: var(--surface); border: 1px solid var(--border-strong); border-radius: 999px; font-size: 0.82rem; }
+.chip-balance b { font-weight: 700; color: var(--green-300); font-variant-numeric: tabular-nums; }
+.chip-eth { color: var(--text-muted); font-variant-numeric: tabular-nums; }
+.wallet-chip code { padding: 6px 10px; color: var(--text); background: rgba(255, 255, 255, 0.08); border-radius: 999px; }
+.icon-btn {
+  display: grid; place-items: center; width: 40px; height: 40px; font-size: 1.15rem; color: var(--text);
+  background: var(--surface); border: 1px solid var(--border-strong); border-radius: 50%; cursor: pointer; transition: background 0.2s, transform 0.4s var(--ease);
+}
+.icon-btn:hover:not(:disabled) { background: var(--surface-hover); transform: rotate(90deg); }
+.icon-btn:disabled { opacity: 0.4; cursor: not-allowed; }
+
+.views { max-width: 1180px; }
+.view { animation: view-in 0.5s var(--ease) both; }
+@keyframes view-in { from { opacity: 0; transform: translateY(14px); } }
+
+/* ---------- Aviso de transacción ---------- */
+.toast {
+  position: fixed; right: 20px; bottom: 20px; z-index: 60; display: flex; align-items: center; gap: 12px;
+  max-width: min(440px, calc(100vw - 32px)); padding: 14px 16px; font-size: 0.9rem;
+  background: rgba(10, 24, 20, 0.94); border: 1px solid var(--border-strong); border-left-width: 3px; border-radius: var(--radius-md);
+  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.55); backdrop-filter: blur(14px); animation: toast-in 0.4s var(--ease);
+}
+.toast.info { border-left-color: var(--info); }
+.toast.info::before { content: ''; flex-shrink: 0; width: 10px; height: 10px; border-radius: 50%; background: var(--info); animation: pulse 1.2s ease-in-out infinite; }
+.toast.success { border-left-color: var(--ok); }
+.toast.error { border-left-color: var(--error); }
+.toast a { flex-shrink: 0; color: var(--green-300); font-size: 0.82rem; text-decoration: none; white-space: nowrap; }
+.toast a:hover { text-decoration: underline; }
+.toast button { flex-shrink: 0; margin-left: auto; padding: 0 4px; font-size: 1.3rem; line-height: 1; color: var(--text-muted); background: none; border: 0; cursor: pointer; }
+@keyframes toast-in { from { opacity: 0; transform: translateY(12px); } }
+@keyframes pulse { 50% { opacity: 0.3; transform: scale(0.7); } }
+
+/* ---------- Móvil: el riel pasa a barra inferior ---------- */
+@media (max-width: 820px) {
+  .app { grid-template-columns: minmax(0, 1fr); }
+  .rail {
+    position: fixed; inset: auto 0 0 0; z-index: 40; flex-direction: row; justify-content: center; gap: 0; height: auto;
+    padding: 8px 12px calc(8px + env(safe-area-inset-bottom)); border-right: 0; border-top: 1px solid var(--border);
+    background: rgba(5, 13, 10, 0.88);
+  }
+  .rail-logo { display: none; }
+  .rail-nav { grid-auto-flow: column; grid-auto-columns: 1fr; max-width: 460px; }
+  .nav-badge { right: calc(50% - 22px); }
+  .stage { padding-bottom: 120px; }
+  .topbar { align-items: flex-start; }
+  .network-pill { display: none; }
+  .toast { left: 16px; right: 16px; bottom: 92px; max-width: none; }
+}
+@media (max-width: 520px) {
+  .chip-eth { display: none; }
+}
